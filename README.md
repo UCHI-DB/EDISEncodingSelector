@@ -41,3 +41,5 @@ User should invoke the script as following:
 <model_path> is the path to write model file to.
 
 <num_class> is the number of encoding types for the given data file. Integer type supports 5 encoding types, and string type supports 4 types. For details of encoding type supported, refer to *IntEncoding* and *StringEncoding*
+
+We include pre-trained models for both string and integer data type in the source code distribution. User can find them under folder *src/main/model*

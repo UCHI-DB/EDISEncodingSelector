@@ -20,26 +20,35 @@
  *     Hao Jiang - initial API and implementation
  *
  */
-package edu.uchicago.cs.ndnn.example.mnist
 
-import edu.uchicago.cs.ndnn._
+package edu.uchicago.cs.encsel.tool
 
-class MnistGraph extends Graph(Xavier, new SGD(0.5, 1), new SoftMaxLogLoss) {
+import scala.io.Source
 
-  val pixelInput = input("pixel")
+object WordVectorQuery extends App {
 
-  {
-    val w1 = param("w1", Array(28 * 28, 128))
-    val b1 = param("b1", Array(1, 128))(Zero)
-    val w2 = param("w2", Array(128, 10))
-    val b2 = param("b2", Array(1, 10))(Zero)
+  val src = "/home/harper/Downloads/glove.42B.300d.txt"
 
-    val wx = new DotMul(pixelInput, w1)
-    val addb = new Add(wx, b1)
-    val relu = new Sigmoid(addb)
-    val layer2 = new DotMul(relu, w2)
-    val addb2 = new Add(layer2, b2)
-    val softmax = new SoftMax(addb2)
-    output(softmax)
+  val word1 = "st."
+  val word2 = "rd."
+  val word3 = "road"
+  val word4 = "street"
+  val word5 = "avenue"
+
+  Source.fromFile(src).getLines().foreach {
+    line =>
+      {
+        val sp = line.split("\\s+")
+        if (sp(0).equals(word1))
+          println(line)
+        if (sp(0).equals(word2))
+          println(line)
+        if (sp(0).equals(word3))
+          println(line)
+        if (sp(0).equals(word4))
+          println(line)
+        if (sp(0).equals(word5))
+          println(line)
+      }
   }
 }

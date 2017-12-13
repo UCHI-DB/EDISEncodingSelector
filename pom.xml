@@ -132,7 +132,6 @@
 				</executions>
 			</plugin>
 
-			
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.3</version>
@@ -190,8 +189,12 @@
 							<target>
 								<!--backup the "proper" persistence.xml -->
 								<copy
-									file="${project.build.outputDirectory}/META-INF/persistence.xml"
-									tofile="${project.build.outputDirectory}/META-INF/persistence.xml.proper" />
+										file="${project.build.outputDirectory}/META-INF/persistence.xml"
+										tofile="${project.build.outputDirectory}/META-INF/persistence.xml.proper" />
+								<!--replace the "proper" persistence.xml with the "test" version -->
+								<copy
+										file="${project.build.testOutputDirectory}/META-INF/persistence.xml"
+										tofile="${project.build.outputDirectory}/META-INF/persistence.xml" />
 								<!--replace the "proper" persistence.xml with the "test" version -->
 								<copy
 									file="${project.build.testOutputDirectory}/META-INF/persistence.xml"
@@ -209,9 +212,9 @@
 							<target>
 								<!-- restore the " proper " persistence.xml -->
 								<copy
-									file="${project.build.outputDirectory}/META-INF/persistence.xml.proper"
-									tofile="${project.build.outputDirectory}/META-INF/persistence.xml"
-									overwrite="true" />
+										file="${project.build.outputDirectory}/META-INF/persistence.xml.proper"
+										tofile="${project.build.outputDirectory}/META-INF/persistence.xml"
+										overwrite="true" />
 							</target>
 						</configuration>
 						<goals>
@@ -224,8 +227,8 @@
 	</build>
 
 	<properties>
-        <parquet.version>1.9.0</parquet.version>
-        <hadoop.version>2.7.3</hadoop.version>
+		<parquet.version>1.9.0</parquet.version>
+		<hadoop.version>2.7.3</hadoop.version>
 	</properties>
 
 	<dependencies>
@@ -356,11 +359,22 @@
 			<artifactId>orc-core</artifactId>
 			<version>1.4.0</version>
 		</dependency>
-        <dependency>
-            <groupId>org.apache.parquet</groupId>
-            <artifactId>parquet-hadoop</artifactId>
-            <version>${parquet.version}</version>
-        </dependency>
+		<dependency>
+			<groupId>org.apache.parquet</groupId>
+			<artifactId>parquet-hadoop</artifactId>
+			<version>${parquet.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.tensorflow</groupId>
+			<artifactId>tensorflow</artifactId>
+			<version>1.4.0</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.nd4j/nd4j-api -->
+		<dependency>
+			<groupId>org.nd4j</groupId>
+			<artifactId>nd4j-api</artifactId>
+			<version>0.9.1</version>
+		</dependency>
 
-    </dependencies>
+	</dependencies>
 </project>

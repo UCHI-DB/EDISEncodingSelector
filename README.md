@@ -15,9 +15,29 @@ Using this framework, we have collected over 7000 columns from approximately 120
 
 ## Data Driven Encoding Prediction
 
-In this project, we target at building a encoding selector that is able to "predict" the best encoding scheme by looking at only a limited section of the entire dataset, e.g., the first 1% of the records. To do this, we plan to use the collected data columns and the "ground truth" best encoding scheme to train a neural network for this purpose. 
+In this project, we target at building a encoding selector that is able to "predict" the best encoding scheme by looking at only a limited section of the entire dataset, e.g., the first 1M records. To do this, we use the collected data columns and the "ground truth" best encoding scheme to train a neural network to make prediction. We modify Apache Parquet code to support per-column encoding setting, and inject our encoding prediction code to choose best encoding for a given data column on the fly. Besides storage size, we also study how different encodings have impact on query performance.
 
 ## Encoding tool based on Apache Parquet
 
 As an example, we provide a command line tool to encode a given CSV file into Apache Parquet format while automatically choose encoding for each column. The source code can be found at *src/main/scala/edu/uchicago/cs/encsel/app/encoding/ParquetEncoder*
 
+User should invoke the tool as following:
+
+**ParquetEncoder <input_file> <schema_file> <output_file> <int_model> <string_model>**
+
+where <input_file> is a CSV file to be encoded, <schema_file> describes the name for each column. The encoded file will be written to <output_file>.
+
+<int_model> and <string_model> are pre-trained models for integer type and string type. We currently only support encoding selections for these two types as the number of encodings for other data types are limited.
+
+We also provide a Python script to train models from data. The script can be found at
+*src/main/pythonencsel/train.py*
+
+User should invoke the script as following:
+
+**train.py <data_file> <model_path> <num_class>** 
+
+<data_file> is a CSV file contains features extracted from data columns and the preferred encoding. Refer to *Features* for available features. Currently we use 21 features, so the CSV file should contain 22 columns, where the last column indicates encoding type.
+
+<model_path> is the path to write model file to.
+
+<num_class> is the number of encoding types for the given data file. Integer type supports 5 encoding types, and string type supports 4 types. For details of encoding type supported, refer to *IntEncoding* and *StringEncoding*

@@ -20,30 +20,32 @@
  *     Hao Jiang - initial API and implementation
  *
  */
-package edu.uchicago.cs.ndnn
 
-import org.nd4j.linalg.api.ndarray.INDArray
-import org.nd4j.linalg.api.rng.distribution.impl.UniformDistribution
-import org.nd4j.linalg.api.rng.distribution.impl.NormalDistribution
-import org.nd4j.linalg.factory.Nd4j
+package edu.uchicago.cs.encsel.tool
 
-trait InitPolicy {
-  def init(shape: Array[Int]): INDArray
+import scala.io.Source
+import scala.util.Random
+import java.io.FileOutputStream
+import java.io.PrintWriter
 
-  def init(shape: Int*): INDArray = init(shape.toArray)
-}
+object FileSampler extends App {
 
-object Xavier extends InitPolicy {
-  def init(shape: Array[Int]): INDArray = {
-    val n = shape.dropRight(1).product
-    val sd = Math.sqrt(3d / n)
-    new UniformDistribution(-sd,sd).sample(shape)
-//    new NormalDistribution(0, sd).sample(shape)
-  }
-}
+  val file = "/home/harper/enc_workspace/date.tmp"
+  val train = "/home/harper/enc_workspace/train.txt"
+  val test = "/home/harper/enc_workspace/test.txt"
+  val trainRate = 0.01
+  val testRate = 0.001
 
-object Zero extends InitPolicy {
-  def init(shape: Array[Int]): INDArray = {
-    Nd4j.zeros(shape:_*)
-  }
+  val trainOut = new PrintWriter(new FileOutputStream(train))
+  val testOut = new PrintWriter(new FileOutputStream(test))
+  Source.fromFile(file).getLines.foreach(line => {
+    val rand = Random.nextDouble()
+    if (rand < trainRate)
+      trainOut.println(line)
+    if (rand < testRate)
+      testOut.println(line)
+  })
+
+  trainOut.close()
+  testOut.close()
 }
